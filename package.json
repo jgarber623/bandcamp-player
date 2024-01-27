@@ -30,7 +30,7 @@
     "start": "npx http-server ."
   },
   "devDependencies": {
-    "@jgarber/eslint-config": "^3.0.0"
+    "@jgarber/eslint-config": "*"
   },
   "publishConfig": {
     "access": "public"
