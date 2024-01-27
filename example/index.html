@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>&lt;bandcamp-player&gt; Web Component</title>
+
+  <script type="module" src="../bandcamp-player.js"></script>
+
+  <style>
+    html {
+      background: #101010;
+      color: #ced4d7;
+      font-family: sans-serif;
+    }
+
+    body {
+      margin: 3rem auto;
+      max-width: 36rem;
+    }
+
+    header {
+      margin-bottom: 3rem;
+    }
+
+    h1 {
+      font-weight: normal;
+    }
+
+    code {
+      background: rgb(255 255 255 / 0.15);
+      border-radius: 0.25rem;
+      display: inline-block;
+      font-family: monospace;
+      padding: 0.4rem 0.5rem;
+    }
+
+    bandcamp-player {
+      margin-bottom: 3rem;
+
+      &:not(:defined) {
+        display: block;
+      }
+
+      p {
+        background: rgb(255 255 255 / 0.15);
+        border-radius: 0.25rem;
+        margin: 0;
+        padding: 1rem;
+      }
+
+      cite {
+        font-style: normal;
+
+        &::before {
+          content: "“";
+        }
+
+        &::after {
+          content: "”";
+        }
+      }
+
+      a {
+        color: #aa8b54;
+
+        &:focus,
+        &:hover {
+          color: #c29951;
+        }
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1><code>&lt;bandcamp-player&gt;</code> Web Component</h1>
+  </header>
+
+  <main>
+    <p>Using only the <code>album</code> attribute.</p>
+    <bandcamp-player album="3656183138">
+      <p>Listen to <cite><a href="https://theorchid.bandcamp.com/album/apogee-perigee">Apogee, Perigee</a></cite> by <a href="https://theorchid.bandcamp.com">The Orchid</a> on Bandcamp.</p>
+    </bandcamp-player>
+
+    <p>Using only the <code>track</code> attribute.</p>
+    <bandcamp-player track="3653942277">
+      <p>Listen to <cite><a href="https://theorchid.bandcamp.com/track/spawning-of-the-herring">Spawning of the Herring</a></cite> by <a href="https://theorchid.bandcamp.com">The Orchid</a> on Bandcamp.</p>
+    </bandcamp-player>
+
+    <p>Using the <code>album</code> and <code>track</code> attributes.</p>
+    <bandcamp-player album="3995949234" track="1627531154"></bandcamp-player>
+
+    <p>Using the <code>album</code>, <code>track</code>, <code>theme</code>, and <code>accent</code> attributes.</p>
+    <bandcamp-player album="3656183138" track="3220102216" theme="dark" accent="aa8b54"></bandcamp-player>
+
+    <p>Using <code>theme="auto"</code> to match the <code>prefers-color-scheme</code> CSS media feature.</p>
+    <bandcamp-player album="3656183138" theme="auto"></bandcamp-player>
+
+    <p>An inline <code>style</code> attribute using the <code>--bp-frame-border</code> custom property.</p>
+    <bandcamp-player album="3656183138" style="--bp-frame-border: 0.25rem solid #0687f5;"></bandcamp-player>
+  </main>
+
+</body>
+</html>
