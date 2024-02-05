@@ -13,16 +13,7 @@ export default class BandcampPlayer extends HTMLElement {
     light: 'ffffff'
   };
 
-  static defaults = {
-    artwork: 'none',
-    bgcol: this.themes.light,
-    linkcol: '0687f5',
-    size: 'large',
-    tracklist: false,
-    transparent: true
-  };
-
-  static stylesheet = `\
+  static css = `\
     :host {
       --host-display: var(--bp-host-display, block);
 
@@ -45,6 +36,15 @@ export default class BandcampPlayer extends HTMLElement {
     }
   `;
 
+  static defaults = {
+    artwork: 'none',
+    bgcol: this.themes.light,
+    linkcol: '0687f5',
+    size: 'large',
+    tracklist: false,
+    transparent: true
+  };
+
   static register(tagName = this.tagName) {
     if ('customElements' in window) {
       window.customElements.define(tagName, this);
@@ -60,7 +60,7 @@ export default class BandcampPlayer extends HTMLElement {
   connectedCallback() {
     const stylesheet = new CSSStyleSheet();
 
-    stylesheet.replaceSync(BandcampPlayer.stylesheet);
+    stylesheet.replaceSync(BandcampPlayer.css);
 
     this.shadow.adoptedStyleSheets = [stylesheet];
 
