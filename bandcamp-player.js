@@ -58,15 +58,15 @@ export default class BandcampPlayer extends HTMLElement {
   connectedCallback() {
     const stylesheet = new CSSStyleSheet();
 
-    stylesheet.replaceSync(BandcampPlayer.css);
+    stylesheet.replaceSync(this.constructor.css);
 
     this.shadow.adoptedStyleSheets = [stylesheet];
 
     const attributes = {
-      ...BandcampPlayer.defaults,
+      ...this.constructor.defaults,
       album: this.getAttribute('album'),
-      bgcol: BandcampPlayer.themes[this.getAttribute('theme') || 'light'],
-      linkcol: this.getAttribute('accent') || BandcampPlayer.defaults.linkcol,
+      bgcol: this.constructor.themes[this.getAttribute('theme') || 'light'],
+      linkcol: this.getAttribute('accent') || this.constructor.defaults.linkcol,
       track: this.getAttribute('track')
     };
 
