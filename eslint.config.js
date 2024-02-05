@@ -7,8 +7,7 @@ export default [
       globals: {
         CSSStyleSheet: 'readonly',
         document: 'readonly',
-        HTMLElement: 'readonly',
-        window: 'readonly'
+        HTMLElement: 'readonly'
       }
     }
   }

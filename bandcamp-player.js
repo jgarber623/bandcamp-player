@@ -3,7 +3,7 @@ export default class BandcampPlayer extends HTMLElement {
 
   static themes = {
     auto: (() => {
-      if ('matchMedia' in window && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+      if ('matchMedia' in globalThis && globalThis.matchMedia('(prefers-color-scheme: dark)').matches) {
         return '333333';
       }
 
@@ -45,10 +45,8 @@ export default class BandcampPlayer extends HTMLElement {
     transparent: true
   };
 
-  static register(tagName = this.tagName) {
-    if ('customElements' in window) {
-      window.customElements.define(tagName, this);
-    }
+  static register(tagName = this.tagName, registry = globalThis.customElements) {
+    registry?.define(tagName, this);
   }
 
   constructor() {
