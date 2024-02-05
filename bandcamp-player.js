@@ -51,18 +51,18 @@ export default class BandcampPlayer extends HTMLElement {
     }
   }
 
+  constructor() {
+    super();
+
+    this.shadow = this.attachShadow({ mode: 'open' });
+  }
+
   connectedCallback() {
-    if (this.shadowRoot) {
-      return;
-    }
-
-    const shadow = this.attachShadow({ mode: 'open' });
-
     const stylesheet = new CSSStyleSheet();
 
     stylesheet.replaceSync(BandcampPlayer.stylesheet);
 
-    shadow.adoptedStyleSheets = [stylesheet];
+    this.shadow.adoptedStyleSheets = [stylesheet];
 
     const attributes = {
       ...BandcampPlayer.defaults,
@@ -84,7 +84,7 @@ export default class BandcampPlayer extends HTMLElement {
     iframe.loading = 'lazy';
     iframe.src = `https://bandcamp.com/EmbeddedPlayer/${parameters}`;
 
-    shadow.append(iframe);
+    this.shadow.append(iframe);
   }
 }
 
