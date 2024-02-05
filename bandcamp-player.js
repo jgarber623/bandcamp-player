@@ -33,6 +33,10 @@ export default class BandcampPlayer extends HTMLElement {
       display: var(--host-display);
     }
 
+    :host[hidden] {
+      display: none;
+    }
+
     iframe {
       border: var(--frame-border);
       display: block;
