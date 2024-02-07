@@ -113,6 +113,25 @@ bandcamp-player {
 > [!NOTE]
 > Styling the width and height of the Bandcamp embedded player requires some foreknowledge of the content rendered within the `<iframe>`.
 
+## JavaScript API
+
+While not encouraged, you may create instances of this Web Component using JavaScript:
+
+```js
+const player = document.createElement('bandcamp-player');
+
+player.album = 3656183138;
+player.track = 3220102216;
+
+player.accent = 'aa8b54';
+player.theme = 'dark';
+
+document.body.append(player);
+```
+
+> [!NOTE]
+> Once attached to the DOM, changes to `player`'s properties and attributes will not (currently, at least) trigger a re-render of the element.
+
 ## Notes and Limitations
 
 This Web Component currently offers a limited subset of the Bandcamp embedded player's features. Future versions will integrate additional options such as displaying artwork and a tracklist. Open the "Share / Embed" widget on any Bandcamp album or track page and click the "Embed this…" link for a look at the full range of customizations.
