@@ -1,16 +1,21 @@
 export default class BandcampPlayer extends HTMLElement {
+  static #bgcolDark = '333333';
+  static #bgcolLight = 'ffffff';
+
   static tagName = 'bandcamp-player';
+
+  static observedAttributes = ['album', 'accent', 'theme', 'track'];
 
   static themes = {
     auto: (() => {
       if ('matchMedia' in globalThis && globalThis.matchMedia('(prefers-color-scheme: dark)').matches) {
-        return '333333';
+        return this.#bgcolDark;
       }
 
-      return 'ffffff';
+      return this.#bgcolLight;
     })(),
-    dark: '333333',
-    light: 'ffffff'
+    dark: this.#bgcolDark,
+    light: this.#bgcolLight
   };
 
   static css = `\
@@ -38,8 +43,6 @@ export default class BandcampPlayer extends HTMLElement {
 
   static defaults = {
     artwork: 'none',
-    bgcol: this.themes.light,
-    linkcol: '0687f5',
     size: 'large',
     tracklist: false,
     transparent: true
@@ -49,10 +52,71 @@ export default class BandcampPlayer extends HTMLElement {
     registry?.define(tagName, this);
   }
 
+  #album;
+  #track;
+
+  #accent = '0687f5';
+  #theme = 'light';
+
   constructor() {
     super();
 
     this.shadow = this.attachShadow({ mode: 'open' });
+  }
+
+  get album() {
+    return this.#album;
+  }
+
+  set album(value) {
+    this.setAttribute('album', value);
+  }
+
+  get accent() {
+    return this.#accent;
+  }
+
+  set accent(value) {
+    this.setAttribute('accent', value);
+  }
+
+  get theme() {
+    return this.#theme;
+  }
+
+  set theme(value) {
+    this.setAttribute('theme', value);
+  }
+
+  get track() {
+    return this.#track;
+  }
+
+  set track(value) {
+    this.setAttribute('track', value);
+  }
+
+  attributeChangedCallback(name, oldValue, newValue) {
+    switch (name) {
+      case 'album': {
+        this.#album = newValue;
+        break;
+      }
+      case 'accent': {
+        this.#accent = newValue;
+        break;
+      }
+      case 'theme': {
+        if (Object.keys(this.constructor.themes).includes(newValue)) {
+          this.#theme = newValue;
+        }
+        break;
+      }
+      case 'track': {
+        this.#track = newValue;
+        break;
+      }
+    }
   }
 
   connectedCallback() {
@@ -62,17 +126,15 @@ export default class BandcampPlayer extends HTMLElement {
 
     this.shadow.adoptedStyleSheets = [stylesheet];
 
-    const attributes = {
-      ...this.constructor.defaults,
-      album: this.getAttribute('album'),
-      bgcol: this.constructor.themes[this.getAttribute('theme') || 'light'],
-      linkcol: this.getAttribute('accent') || this.constructor.defaults.linkcol,
-      track: this.getAttribute('track')
-    };
-
     const parameters =
       Object
-        .entries(attributes)
+        .entries({
+          ...this.constructor.defaults,
+          album: this.album,
+          bgcol: this.constructor.themes[this.theme],
+          linkcol: this.accent,
+          track: this.track
+        })
         .filter(([_, value]) => ![null, undefined].includes(value))
         .map(entry => entry.join('='))
         .join('/');
