@@ -1,22 +1,7 @@
 export default class BandcampPlayer extends HTMLElement {
-  static #bgcolDark = '333333';
-  static #bgcolLight = 'ffffff';
+  static tagName = "bandcamp-player";
 
-  static tagName = 'bandcamp-player';
-
-  static observedAttributes = ['album', 'accent', 'theme', 'track'];
-
-  static themes = {
-    auto: (() => {
-      if ('matchMedia' in globalThis && globalThis.matchMedia('(prefers-color-scheme: dark)').matches) {
-        return this.#bgcolDark;
-      }
-
-      return this.#bgcolLight;
-    })(),
-    dark: this.#bgcolDark,
-    light: this.#bgcolLight
-  };
+  static observedAttributes = ["album", "accent", "artwork", "size", "theme", "track"];
 
   static css = `\
     :host {
@@ -29,8 +14,17 @@ export default class BandcampPlayer extends HTMLElement {
       display: var(--host-display);
     }
 
-    :host[hidden] {
-      display: none;
+    :host([artwork="large"]) {
+      --frame-height: var(--bp-frame-height, 470px);
+      --frame-width: var(--bp-frame-width, 350px);
+    }
+
+    :host([size="small"]) {
+      --frame-height: var(--bp-frame-height, 42px);
+    }
+
+    :host([hidden]) {
+      --host-display: none;
     }
 
     iframe {
@@ -41,82 +35,121 @@ export default class BandcampPlayer extends HTMLElement {
     }
   `;
 
-  static defaults = {
-    artwork: 'none',
-    size: 'large',
-    tracklist: false,
-    transparent: true
+  static themes = {
+    auto: (() => {
+      if ("matchMedia" in globalThis && globalThis.matchMedia("(prefers-color-scheme: dark)").matches) {
+        return "333333";
+      }
+
+      return "ffffff";
+    })(),
+    dark: "333333",
+    light: "ffffff",
   };
 
   static register(tagName = this.tagName, registry = globalThis.customElements) {
     registry?.define(tagName, this);
   }
 
-  #album;
-  #track;
+  #connected = false;
 
-  #accent = '0687f5';
-  #theme = 'light';
+  #props = {
+    album: "",
+    track: "",
+
+    accent: "0687f5",
+    artwork: "none",
+    size: "large",
+    theme: "light",
+    tracklist: false,
+    transparent: true,
+  };
 
   constructor() {
     super();
 
-    this.shadow = this.attachShadow({ mode: 'open' });
+    this.shadow = this.attachShadow({ mode: "open" });
   }
 
   get album() {
-    return this.#album;
+    return this.#props.album;
   }
 
   set album(value) {
-    this.setAttribute('album', value);
+    this.setAttribute("album", value ?? "");
   }
 
   get accent() {
-    return this.#accent;
+    return this.#props.accent;
   }
 
   set accent(value) {
-    this.setAttribute('accent', value);
+    this.setAttribute("accent", value ?? "");
+  }
+
+  get artwork() {
+    return this.#props.artwork;
+  }
+
+  set artwork(value) {
+    value = (() => {
+      switch (value.toLowerCase()) {
+        case "large": return "large";
+        case "small": return "small";
+        default: return "none";
+      }
+    })();
+
+    this.setAttribute("artwork", value);
+  }
+
+  get size() {
+    return this.#props.size;
+  }
+
+  set size(value) {
+    value = (() => {
+      switch (value.toLowerCase()) {
+        case "small": return "small";
+        default: return "large";
+      }
+    })();
+
+    this.setAttribute("size", value);
   }
 
   get theme() {
-    return this.#theme;
+    return this.#props.theme;
   }
 
   set theme(value) {
-    this.setAttribute('theme', value);
+    value = (() => {
+      switch (value.toLowerCase()) {
+        case "auto": return "auto";
+        case "dark": return "dark";
+        default: return "light";
+      }
+    })();
+
+    this.setAttribute("theme", value);
   }
 
   get track() {
-    return this.#track;
+    return this.#props.track;
   }
 
   set track(value) {
-    this.setAttribute('track', value);
+    this.setAttribute("track", value ?? "");
   }
 
   attributeChangedCallback(name, oldValue, newValue) {
-    switch (name) {
-      case 'album': {
-        this.#album = newValue;
-        break;
-      }
-      case 'accent': {
-        this.#accent = newValue;
-        break;
-      }
-      case 'theme': {
-        if (Object.keys(this.constructor.themes).includes(newValue)) {
-          this.#theme = newValue;
-        }
-        break;
-      }
-      case 'track': {
-        this.#track = newValue;
-        break;
-      }
+    if (!this.constructor.observedAttributes.includes(name)) {
+      return;
     }
+
+    this.#props[name] = newValue;
+
+    this.render();
   }
 
   connectedCallback() {
@@ -126,25 +159,50 @@ export default class BandcampPlayer extends HTMLElement {
 
     this.shadow.adoptedStyleSheets = [stylesheet];
 
+    this.#connected = true;
+
+    this.render();
+  }
+
+  disconnectedCallback() {
+    this.#connected = false;
+  }
+
+  render() {
+    if (!this.#connected) {
+      return false;
+    }
+
+    const { album, artwork, size, track, tracklist, transparent } = this.#props;
+
+    const properties = {
+      album,
+      artwork,
+      bgcol: this.constructor.themes[this.#props.theme],
+      linkcol: this.#props.accent,
+      size,
+      track,
+      tracklist,
+      transparent,
+    };
+
+    if (size === "small" && artwork !== "none") {
+      delete properties.artwork;
+    }
+
     const parameters =
       Object
-        .entries({
-          ...this.constructor.defaults,
-          album: this.album,
-          bgcol: this.constructor.themes[this.theme],
-          linkcol: this.accent,
-          track: this.track
-        })
-        .filter(([_, value]) => ![null, undefined].includes(value))
-        .map(entry => entry.join('='))
-        .join('/');
+        .entries(properties)
+        .filter(([_, value]) => ![null, undefined, ""].includes(value))
+        .map(entry => entry.join("="))
+        .join("/");
 
-    const iframe = document.createElement('iframe');
+    const iframe = document.createElement("iframe");
 
-    iframe.loading = 'lazy';
+    iframe.loading = "lazy";
     iframe.src = `https://bandcamp.com/EmbeddedPlayer/${parameters}`;
 
-    this.shadow.append(iframe);
+    this.shadow.replaceChildren(iframe);
   }
 }
 
