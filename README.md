@@ -62,25 +62,30 @@ As noted above, this Web Component requires an `album` or `track` ID (or both!).
 
 You _can_ get these values by inspecting the HTML of any album or track page. Album and track identifiers are littered throughout the markup and inlined JSON data. It's a mess.
 
-As of this writing, there's a consistently present `<meta name="bc-page-properties">` element at the top of each album or track page. Buried in its encoded `content` attribute value is a ten(ish)-digit `item_id`.
+As of this writing, there's a `<meta name="bc-page-properties">` element at the top of each album or track page. Buried in its encoded `content` attribute value is a ten(ish)-digit `item_id`.
 
 If you're feeling bold, you can enter the following command in your Web browser's developer tools to retrieve the `item_id`:
 
 ```js
-JSON.parse(document.querySelector('meta[name="bc-page-properties"]').content).item_id
+JSON.parse(document.querySelector(`meta[name="bc-page-properties"]`).content).item_id
 ```
 
 ## Optional Attributes
 
 This Web Component supports the following optional attributes.
 
-| Name     | Default  | Description                     |
-|:---------|:---------|:--------------------------------|
-| `theme`  | `light`  | One of `light`, `dark`, `auto`. |
-| `accent` | `0687f5` | A hexadecimal color code.       |
+| Name      | Default  | Values                   |
+|:----------|:---------|:-------------------------|
+| `accent`  | `0687f5` | A hexadecimal color code |
+| `artwork` | `none`   | `none`, `large`, `small` |
+| `size`    | `large`  | `large`,`small`          |
+| `theme`   | `light`  | `light`, `dark`, `auto`  |
 
 > [!TIP]
 > The `theme` attribute's `auto` value sets the Bandcamp embedded player's background color using [the `prefers-color-scheme` CSS media feature](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-color-scheme).
+
+> [!NOTE]
+> When using the `size="small"` and `artwork` attributes, any allowed value other than `none` for the `artwork` attribute will display an album or track thumbnail.
 
 ## Custom Styling
 
@@ -115,26 +120,26 @@ bandcamp-player {
 
 ## JavaScript API
 
-While not encouraged, you may create instances of this Web Component using JavaScript:
+You may also create instances of this Web Component using JavaScript:
 
 ```js
-const player = document.createElement('bandcamp-player');
+const player = document.createElement("bandcamp-player");
 
-player.album = 3656183138;
-player.track = 3220102216;
+player.album = "3656183138";
+player.track = "3220102216";
 
-player.accent = 'aa8b54';
-player.theme = 'dark';
+player.accent = "aa8b54";
+player.theme = "dark";
 
 document.body.append(player);
 ```
 
-> [!NOTE]
-> Once attached to the DOM, changes to `player`'s properties and attributes will not (currently, at least) trigger a re-render of the element.
+> [!TIP]
+> Once attached to the DOM, changes to `player`'s properties and attributes will trigger a re-render of the Web Compoment.
 
 ## Notes and Limitations
 
-This Web Component currently offers a limited subset of the Bandcamp embedded player's features. Future versions will integrate additional options such as displaying artwork and a tracklist. Open the "Share / Embed" widget on any Bandcamp album or track page and click the "Embed this…" link for a look at the full range of customizations.
+This Web Component currently offers a subset of the Bandcamp embedded player's features. Open the "Share / Embed" widget on any Bandcamp album or track page and click the "Embed this…" link for a look at the full range of customizations.
 
 The reliance on [Shadow DOM](https://developer.mozilla.org/en-US/docs/Web/API/Web_components/Using_shadow_DOM) here is of questionable utility. This Web Component could've just as easily leveraged the DOM (more recently rebranded as, "Light DOM" 🙄) and been an [HTML web component](https://adactio.com/journal/20618). Further, perhaps your use case doesn't require this Web Component at all! The direct-from-Bandcamp `<iframe>` code snippet will work just as well.
 
