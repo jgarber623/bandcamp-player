@@ -10,11 +10,7 @@
   "homepage": "https://github.com/jgarber623/bandcamp-player",
   "bugs": "https://github.com/jgarber623/bandcamp-player/issues",
   "license": "MIT",
-  "author": {
-    "name": "Jason Garber",
-    "email": "jason@sixtwothree.org",
-    "url": "https://sixtwothree.org"
-  },
+  "author": "Jason Garber <jason@sixtwothree.org> (https://sixtwothree.org)",
   "files": [
     "bandcamp-player.js",
     "example/*"
