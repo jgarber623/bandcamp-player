@@ -1,0 +1,62 @@
+html {
+  background: #101010;
+  color: #ced4d7;
+  font-family: sans-serif;
+}
+
+body {
+  margin: 3rem auto;
+  width: min(36rem, 100% - 3rem);
+}
+
+header {
+  margin-bottom: 3rem;
+}
+
+h1 {
+  font-weight: normal;
+}
+
+code {
+  background: rgb(255 255 255 / 0.15);
+  border-radius: 0.25rem;
+  display: inline-block;
+  font-family: monospace;
+  padding: 0.4rem 0.5rem;
+}
+
+bandcamp-player {
+  margin-bottom: 3rem;
+
+  &:not(:defined) {
+    display: block;
+  }
+
+  p {
+    background: rgb(255 255 255 / 0.15);
+    border-radius: 0.25rem;
+    margin: 0;
+    padding: 1rem;
+  }
+
+  cite {
+    font-style: normal;
+
+    &::before {
+      content: "“";
+    }
+
+    &::after {
+      content: "”";
+    }
+  }
+
+  a {
+    color: #aa8b54;
+
+    &:focus,
+    &:hover {
+      color: #c29951;
+    }
+  }
+}
