@@ -47,11 +47,9 @@ export default class BandcampPlayer extends HTMLElement {
     light: "ffffff",
   };
 
-  static register(tagName = this.tagName, registry = globalThis.customElements) {
+  static define(tagName = this.tagName, registry = globalThis.customElements) {
     registry?.define(tagName, this);
   }
-
-  #connected = false;
 
   #props = {
     album: "",
@@ -65,11 +63,7 @@ export default class BandcampPlayer extends HTMLElement {
     transparent: true,
   };
 
-  constructor() {
-    super();
-
-    this.shadow = this.attachShadow({ mode: "open" });
-  }
+  shadowRoot = this.attachShadow({ mode: "open" });
 
   get album() {
     return this.#props.album;
@@ -143,13 +137,11 @@ export default class BandcampPlayer extends HTMLElement {
   }
 
   attributeChangedCallback(name, oldValue, newValue) {
-    if (!this.constructor.observedAttributes.includes(name)) {
-      return;
-    }
+    if (!this.constructor.observedAttributes.includes(name)) return;
 
     this.#props[name] = newValue;
 
-    this.render();
+    this.isConnected && this.#render();
   }
 
   connectedCallback() {
@@ -157,22 +149,12 @@ export default class BandcampPlayer extends HTMLElement {
 
     stylesheet.replaceSync(this.constructor.css);
 
-    this.shadow.adoptedStyleSheets = [stylesheet];
+    this.shadowRoot.adoptedStyleSheets = [stylesheet];
 
-    this.#connected = true;
-
-    this.render();
+    this.#render();
   }
 
-  disconnectedCallback() {
-    this.#connected = false;
-  }
-
-  render() {
-    if (!this.#connected) {
-      return false;
-    }
-
+  #render() {
     const { album, artwork, size, track, tracklist, transparent } = this.#props;
 
     const properties = {
@@ -202,8 +184,8 @@ export default class BandcampPlayer extends HTMLElement {
     iframe.loading = "lazy";
     iframe.src = `https://bandcamp.com/EmbeddedPlayer/${parameters}`;
 
-    this.shadow.replaceChildren(iframe);
+    this.shadowRoot.replaceChildren(iframe);
   }
 }
 
-BandcampPlayer.register();
+BandcampPlayer.define();
