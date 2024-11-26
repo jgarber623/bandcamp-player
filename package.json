@@ -1,6 +1,6 @@
 {
   "name": "@jgarber/bandcamp-player",
-  "version": "0.2.0",
+  "version": "1.0.0",
   "description": "A Web Component that generates a Bandcamp embedded player.",
   "keywords": [
     "bandcamp",
