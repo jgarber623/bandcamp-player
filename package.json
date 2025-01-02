@@ -11,18 +11,18 @@
   "bugs": "https://github.com/jgarber623/bandcamp-player/issues",
   "license": "MIT",
   "author": "Jason Garber <jason@sixtwothree.org> (https://sixtwothree.org)",
+  "type": "module",
   "files": [
     "bandcamp-player.js",
     "example/*"
   ],
-  "type": "module",
-  "main": "bandcamp-player.js",
+  "exports": "./bandcamp-player.js",
   "directories": {
     "example": "example"
   },
   "repository": "github:jgarber623/bandcamp-player",
   "scripts": {
-    "lint": "eslint .",
+    "lint": "npx eslint .",
     "start": "npx http-server ."
   },
   "devDependencies": {
