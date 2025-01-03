@@ -20,7 +20,7 @@
   "directories": {
     "example": "example"
   },
-  "repository": "github:jgarber623/bandcamp-player",
+  "repository": "https://github.com/jgarber623/bandcamp-player",
   "scripts": {
     "lint": "npx eslint .",
     "start": "npx http-server ."
@@ -29,6 +29,7 @@
     "@jgarber/eslint-config": "*"
   },
   "publishConfig": {
-    "access": "public"
+    "access": "public",
+    "provenance": true
   }
 }
