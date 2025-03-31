@@ -1,3 +1,6 @@
+> [!IMPORTANT]
+> This project has moved to [codeberg.org/jgarber/bandcamp-player](https://codeberg.org/jgarber/bandcamp-player).
+
 # `<bandcamp-player>` Web Component
 
 **A dependency-free [Web Component](https://developer.mozilla.org/en-US/docs/Web/API/Web_Components) that generates a [Bandcamp](https://bandcamp.com) embedded player.**
